@@ -1,20 +1,54 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { AnimatePresence, View } from "moti";
+import { useReducer } from "react";
+import { Pressable, StyleSheet } from "react-native";
+
+function Shape({ bg } :{ bg:any }) {
+  return (
+    <View
+      from={{
+        opacity: 0,
+        scale: 0.5,
+      }}
+      animate={{
+        opacity: 1,
+        scale: 1,
+      }}
+      exit={{
+        opacity: 0,
+        scale: 0.9,
+      }}
+      style={[styles.shape, { backgroundColor: bg }]}
+    />
+  );
+}
 
 export default function App() {
+  const [visible, toggle] = useReducer((s) => !s, true);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Pressable onPress={toggle} style={styles.container}>
+      <AnimatePresence exitBeforeEnter>
+        {visible && <Shape bg="hotpink" key="hotpink" />}
+        {!visible && <Shape bg="cyan" key="cyan" />}
+      </AnimatePresence>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
+  shape: {
+    justifyContent: "center",
+    height: 250,
+    width: 250,
+    borderRadius: 25,
+    marginRight: 10,
+    backgroundColor: "white",
+  },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    backgroundColor: "#9c1aff",
   },
 });
